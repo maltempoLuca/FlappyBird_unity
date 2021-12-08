@@ -34,7 +34,7 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         state = GameState.startState;
-        Application.targetFrameRate = 30;//Screen.currentResolution.refreshRate;
+        Application.targetFrameRate = Screen.currentResolution.refreshRate;
         canvas[0].gameObject.SetActive(true);
     }
     public void gameOver()
