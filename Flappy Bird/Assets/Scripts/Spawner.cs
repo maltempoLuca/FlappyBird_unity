@@ -23,4 +23,9 @@ public class Spawner : MonoBehaviour
         pipes.transform.position += Vector3.up * Random.Range(minHeight, maxHeight);
     }
 
+    public GameObject getPipesPrefab()
+    {
+        return prefab;
+    }
+
 }

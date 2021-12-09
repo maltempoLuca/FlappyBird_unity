@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
+    private EnemyBehaviors enemyBehaviors;
     private enum GameState
     {
         startState,
@@ -35,6 +36,7 @@ public class GameManager : MonoBehaviour
     {
         state = GameState.startState;
         Application.targetFrameRate = Screen.currentResolution.refreshRate;
+        Time.timeScale = 1.0f;
         canvas[0].gameObject.SetActive(true);
     }
     public void gameOver()
@@ -53,6 +55,11 @@ public class GameManager : MonoBehaviour
     {
         yield return new WaitForSecondsRealtime(waitDeathTime);
         canvas[1].gameObject.SetActive(false);
+        if (enemyBehaviors.Equals(null))
+        {
+            enemyBehaviors.restoreState();
+            Destroy(enemyBehaviors);
+        }
         cleanScene();
         Destroy(spawner.gameObject);
         state = GameState.gameOverState;
@@ -71,6 +78,7 @@ public class GameManager : MonoBehaviour
     public void increaseScore()
     {
         score++;
+        enemyBehaviors.changeEnemyAttack(score);
         scoreText.text = score.ToString();
     }
 
@@ -107,6 +115,7 @@ public class GameManager : MonoBehaviour
     {
         player.gameObject.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
         spawner = Instantiate(spawnerPrefab, spawnerPrefab.transform.position, spawnerPrefab.transform.rotation);
+        enemyBehaviors = new EnemyBehaviors(spawner);
     }
 
     private void loadHighScore()
