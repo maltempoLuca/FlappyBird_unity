@@ -20,8 +20,6 @@ public class GameManager : MonoBehaviour
     private int score;
     private int highScore;
     private float waitDeathTime = 1.5f;
-
-
     private GameObject player;
     private GameObject spawner;
     private GameObject ground;

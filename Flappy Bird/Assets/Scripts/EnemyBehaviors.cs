@@ -10,8 +10,9 @@ public class EnemyBehaviors : MonoBehaviour
     private float originalSpeed = 3.0f;
     private const float MIN_SPEED = 1.8f;
     private const float MAX_SPEED = 4.5f;
-    public int movePipeThreshold = 10;
-    public int everyNPipe = 5;
+    public int moveYPipeThreshold = 23;
+    public int everyNPipe = 9;
+    public int moveXPipeThreshold = 9;
     private float currentSpeed = 3.0f;
     private float newSpeed;
 
@@ -25,16 +26,20 @@ public class EnemyBehaviors : MonoBehaviour
 
     public void changeEnemyAttack(int score)
     {
-        if (score >= movePipeThreshold)
+        if (score >= moveXPipeThreshold)
         {
             changePipeVelocity(score);
+        }
+        if (score >= moveYPipeThreshold)
+        {
+            moveYPipe();
         }
     }
 
     public void restoreState()
     {
-        Debug.Log("Restore Speed: " + originalSpeed);
         pipesPrefab.gameObject.GetComponent<Pipes>().changeSpeed(originalSpeed);
+        pipeSpawner.GetComponent<Spawner>().isMovingOnY(false);
     }
 
     private void changePipeVelocity(int score)
@@ -42,26 +47,30 @@ public class EnemyBehaviors : MonoBehaviour
         if (score % everyNPipe == 0)
         {
             newSpeed = Random.Range(MIN_SPEED, MAX_SPEED);
-            Debug.Log("currentSpeed " + currentSpeed);
-            Debug.Log("newSpeed: " + newSpeed);
             halfSpeed = (currentSpeed + newSpeed) / 2;
             currentSpeed = (currentSpeed + halfSpeed) / 2;
-            Debug.Log("velocitaMediaIniziale: " + currentSpeed);
             pipesPrefab.gameObject.GetComponent<Pipes>().changeSpeed(currentSpeed);
-
         }
         else if (score % (everyNPipe + 1) == 0)
         {
-            currentSpeed = (halfSpeed + newSpeed) / 2;
-            Debug.Log("velocitaMediaFinale " + currentSpeed);
+            currentSpeed = (currentSpeed + newSpeed) / 2;
             pipesPrefab.gameObject.GetComponent<Pipes>().changeSpeed(currentSpeed);
         }
         else if (score % (everyNPipe + 2) == 0)
         {
-            currentSpeed = newSpeed;
-            halfSpeed = 0.0f;
-            Debug.Log("velocita ultima " + currentSpeed);
+            currentSpeed = (currentSpeed + newSpeed) / 2;
             pipesPrefab.gameObject.GetComponent<Pipes>().changeSpeed(currentSpeed);
         }
+        else if (score % (everyNPipe + 3) == 0)
+        {
+            currentSpeed = newSpeed;
+            halfSpeed = 0.0f;
+            pipesPrefab.gameObject.GetComponent<Pipes>().changeSpeed(currentSpeed);
+        }
+    }
+
+    private void moveYPipe()
+    {
+        pipeSpawner.GetComponent<Spawner>().isMovingOnY(true);
     }
 }

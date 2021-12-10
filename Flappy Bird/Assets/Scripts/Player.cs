@@ -7,9 +7,11 @@ public class Player : MonoBehaviour
     private bool isPlaying = false;
     private SpriteRenderer spriteRenderer;
     private Vector3 direction;
+    private float topEdge;
 
     public GameManager gameManager;
     public Sprite[] sprites;
+    private float halfHeight;
     private int spriteIndex = 0;
     public float gravity = -9.8f;
     public float stength = 5f;
@@ -23,11 +25,14 @@ public class Player : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         transform.position = Camera.main.ViewportToWorldPoint(new Vector3(0.20f, 0.5f, Camera.main.nearClipPlane + 1f));
         gameManager = FindObjectOfType<GameManager>();
+        halfHeight = spriteRenderer.bounds.size.y / 2;
+        topEdge = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height - 110, 0)).y;
     }
 
     private void Start()
     {
         InvokeRepeating(nameof(animateSprite), 0.15f, 0.15f);
+
     }
 
     private void OnEnable()
@@ -54,7 +59,8 @@ public class Player : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0) || (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began))   // 0 == left
             {
-                direction = Vector3.up * stength;
+                if (transform.position.y < topEdge)
+                    direction = Vector3.up * stength;
             }
             moveBird();
         }
@@ -95,6 +101,13 @@ public class Player : MonoBehaviour
         }
 
         transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
-        transform.position += direction * Time.deltaTime;
+        if (transform.position.y < topEdge)
+        {
+            transform.position += direction * Time.deltaTime;
+        }
+        else
+        {
+            transform.position += direction * Time.deltaTime;
+        }
     }
 }

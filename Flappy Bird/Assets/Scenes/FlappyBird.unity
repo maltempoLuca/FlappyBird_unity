@@ -1860,5 +1860,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dffad34ae746740caba2f8405ee8e8df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movePipeThreshold: 10
-  everyNPipe: 5
+  moveYPipeThreshold: 23
+  everyNPipe: 9
+  moveXPipeThreshold: 9
